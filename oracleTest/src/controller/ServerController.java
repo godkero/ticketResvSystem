@@ -1,5 +1,6 @@
 package controller;
 
+import Protocol;
 import DAO.*;
 import DTO.*;
 import java.io.*;
@@ -12,81 +13,60 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 
-
-
 public class ServerController  implements Runnable
 {
-   Socket socket;
-   BufferedReader buffer;
+   Socket socket = null;
+   OutputStream os = null;
+   InputStream is = null;
 
-   public ServerController(Socket sock, BufferedReader buf)
+
+   public ServerController(Socket sock)
    {
       socket = sock;
-      buffer = buf;
+      os = socket.getOutputStream();
+	  is = socket.getInputStream(); 
+      
    }
 
+   @override
    public void run()
    {
-      int user = 0;
-      int func = 0;
       
-      
+      System.out.println("thread start");
       while (true) {
 		  
-    	  try {
-		     user = buffer.read();
-		     func = buffer.read();
-		  } catch (IOException e1) {
-		     // TODO Auto-generated catch block
-		     e1.printStackTrace();
-		  }
-		
-    	  
-		  try {
-		     if(user == 1) // 각 헤더의 자료형은 우선 int라 가정하고 써 놓은것 String으로 받을경우에 수정 가능
-		     {
-		        DAO dao = new DAO();
-		
-		        if(func == 1)
-		        	dao.selectAll();
-		
-		        else if(func == 2)
-		        	dao.selectAll();
-		
-		        else if(func == 3)
-		        	dao.selectAll();
-		     }
-		
-		     else if(user == 2)
-		     {
-		    	 if(func == 1)
-			        	dao.selectAll();
-			
-			        else if(func == 2)
-			        	dao.selectAll();
-			
-			        else if(func == 3)
-			        	dao.selectAll();		
-		     }
-		
-		     else if(user == 3)
-		     {
-		        DAO dao = new DAO();
-		
-		        if(func == 1)
-		        	dao.selectAll();
-		
-		        else if(func == 2)
-		        	dao.selectAll();
-		
-		        else if(func == 3)
-		        	dao.selectAll();
-		     }
-		  } catch (IOException | ParseException | SQLException e) {
+    	  System.out.println("waiting control char");
+    	  if(is != null) {
+	    	  
+	    	  try {
+		    		  	byte [] buf = protocol.getPacket();
+		    		  	is.read(buf);
+		    		  	int packetType = buf[0]
+		    		  	protocol.setPacket(packetType, buf);
+		    		  	
+				  } catch (IOException e1) {
+				     e1.printStackTrace();
+				  }
+		    	  
+		    	  if(protocolType | 0x4f == 0xff ) {
+		    		  //control 1
+		    	  }
+		    	  else if(protocolType | 0x4f == 0xff) {
+		    		  
+		    	  }
+		    	  else if(protocolType | 0x4f == 0xff) {
+		    		  
+		    	  }
+		    	  else if(protocolType | 0x4f == 0xff) {
+		    		  
+		    	  }
+		    	  else if(protocolType | 0x4f == 0xff) {
+		    		  
+		    	  }
+		    } catch (IOException | ParseException | SQLException e) {
 		     e.printStackTrace();
 		  }
       }
    }
-
 }
 
